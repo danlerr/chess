@@ -1,8 +1,8 @@
 # Chess
 
-Progetto didattico di scacchi in vanilla JS + Vite, warmup di JavaScript applicato al frontend, sviluppato a sprint visibili nei commit.
+Educational chess project in vanilla JS + Vite, a JavaScript warmup applied to the frontend, developed in sprints visible across the commits.
 
-## Come avviare
+## How to run
 
 ```
 npm install
