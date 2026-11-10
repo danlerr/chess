@@ -14,4 +14,8 @@ npm run dev
 ## Project structure
 
 ```
+chess/
+├── index.html        # Application entry point
+├── public/           # Static assets served as-is
+└── src/              # Application source (modules, styles, assets)
 ```
