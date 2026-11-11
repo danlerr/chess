@@ -1,8 +1,8 @@
 
 <div align="center">
 
-    ![board](src/assets/board.png)
-    <h3>chess</h3>
+![board](src/assets/board.png)
+<h3>chess</h3>
 
 </div>
 
