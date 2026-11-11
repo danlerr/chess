@@ -1,6 +1,6 @@
 # Chess
 
-![board](./assets/board.png)
+![board](src/assets/board.png)
 
 An educational chess application built with vanilla JavaScript and Vite. The project serves as a frontend-oriented JavaScript warmup, exploring DOM rendering, state modeling, and incremental feature delivery. Development is organized into iterative sprints, each surfaced as a dedicated commit in the history.
 
