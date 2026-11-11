@@ -20,6 +20,9 @@ export function renderBoard(board, container, state){
             if (state.selected?.r === r && state.selected?.c === c) {
                 el.classList.add("selected");
             }
+            if (state.moves.some(m => m.r === r && m.c === c)) {
+                el.classList.add("move");
+            }
             container.appendChild(el);
         }
     }
