@@ -47,3 +47,7 @@ h1 {
 
 .cell.light { background: #f0d9b5; color: #000; }
 .cell.dark  { background: #b58863; color: #000; }
+.cell.selected {
+  outline: 3px solid #0324fc;
+  outline-offset: -3px;
+}

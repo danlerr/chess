@@ -5,7 +5,7 @@ const SYMBOL = {
   black: { king: "♚", queen: "♛", rook: "♜", bishop: "♝", knight: "♞", pawn: "♟" },
 }
 
-export function renderBoard(board, container){
+export function renderBoard(board, container, state){
     container.innerHTML = "";
     for (let r = 0; r < SIZE; r++){
         for (let c = 0; c < SIZE; c++){
@@ -16,6 +16,10 @@ export function renderBoard(board, container){
 
             const piece = board[r][c];
             if (piece) { el.textContent = SYMBOL[piece.color][piece.type];}
+
+            if (state.selected?.r === r && state.selected?.c === c) {
+                el.classList.add("selected");
+            }
             container.appendChild(el);
         }
     }
