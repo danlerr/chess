@@ -51,4 +51,4 @@ attachBoardListener(container, (r, c) => {
 });
 
 
-board[4][4] = board[7][4]; board[7][4] = null; render()
+//fix
