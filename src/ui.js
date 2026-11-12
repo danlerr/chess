@@ -28,6 +28,11 @@ export function renderBoard(board, container, state){
     }
 }
 
+export function renderTurn(state){
+    document.querySelector("#turn-indicator")
+    .textContent = state.turn === "white" ? "Muove il bianco" : "Muove il nero";
+}
+
 // event bubbling per le celle della board 
 export function attachBoardListener(container, onCellClick){
     container.addEventListener("click", (event) => {

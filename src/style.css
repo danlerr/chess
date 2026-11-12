@@ -66,3 +66,11 @@ h1 {
   border-radius: 50%;
   background: rgba(0, 0, 0, 0.3);
 }
+
+/* --- turno --- */
+#turn-indicator {
+  font-size: 18px;
+  font-weight: 500;
+  color: #eee;
+  margin: 10px 0;
+}
