@@ -12,6 +12,7 @@ const MOVE_GENERATORS = {
     bishop: bishopMoves,
     queen:  queenMoves,
     king:   kingMoves,
+    pawn:   pawnMoves,
 }
 
 const KNIGHT_OFFSETS = [
@@ -79,6 +80,18 @@ function slideInDirection(board, pos, dr, dc){
     return moves;
 }
 
+function inBoard(r, c){
+  return r >= 0 && r < SIZE && c >= 0 && c < SIZE;
+}
+
+function isEmpty(board, r, c){
+  return inBoard(r,c) && board[r][c] === null;
+}
+
+function isEnemy(board, r, c, myColor){
+  return inBoard(r, c) && board[r][c] !== null && board[r][c].color !== myColor;
+}
+
 export function knightMoves(board, pos) {
   return jumpMoves(board, pos, KNIGHT_OFFSETS);
 }
@@ -101,4 +114,23 @@ export function queenMoves(board, pos) {
 
 export function kingMoves(board, pos) {
   return jumpMoves(board, pos, KING_OFFSETS);
+}
+
+export function pawnMoves(board, pos){
+  const { r,c } = pos;
+  const piece = board[r][c];
+  const dir = piece.color === "white" ? -1 : +1;
+  const startRow = piece.color === "white" ? 6 : 1;
+  const moves = [];
+
+  if (isEmpty(board, r + dir, c)) 
+    moves.push({r: r + dir, c});
+  if (r === startRow && isEmpty(board, r + dir, c) && isEmpty(board, r + dir*2, c))
+    moves.push({ r: r + dir*2, c });
+  if (isEnemy(board, r + dir, c - 1, piece.color)) 
+    moves.push({ r: r + dir, c: c - 1 });
+  if (isEnemy(board, r + dir, c + 1, piece.color))
+    moves.push({ r: r + dir, c: c + 1 });
+
+  return moves;
 }
