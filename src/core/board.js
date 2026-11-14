@@ -4,6 +4,7 @@
  * @module core/board
  */
 
+import { createPiece } from "./piece";
 
 // la board possiamo vederela come una matrice B 8x8, quindi come un array di array 
 // quindi B[0][0] è l'elemento in alto a sinistra quindi a8, B[4][4] è e4. 
@@ -30,17 +31,6 @@ const COLOR = Object.freeze({
  */
 function createEmptyBoard(){
   return Array.from({length : SIZE}, () => Array(SIZE).fill(null))
-}
-
-/**
- * Crea un pezzo degli scacchi. 
- * 
- * @param {string} type - unno dei valori di TYPE
- * @param {string} color - "white" o "black"
- * @returns {{type: string, color: string}}
- */
-function createPiece(type, color){
-  return { type, color };
 }
 
 /**
