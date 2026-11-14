@@ -1,7 +1,7 @@
 
 <div align="center">
 
-<img src="src/assets/board.png" alt="board" width="280">
+<img src="public/board.png" alt="board" width="280">
 <h3>chess</h3>
 
 </div>
