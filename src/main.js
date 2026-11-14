@@ -1,6 +1,6 @@
-import { renderBoard,attachBoardListener, renderTurn } from "./ui";
-import { createInitialBoard } from "./core/board";
-import { legalMoves } from "./core/moves.js";
+import { renderBoard,attachBoardListener, renderState } from "./ui";
+import { createInitialBoard, opposite } from "./core/board";
+import { hasAnyLegalMoves, isInCheck, legalMoves } from "./core/moves.js";
 import "./style.css";
 
 
@@ -11,18 +11,19 @@ const state = {
   selected: null,
   moves: [],
   turn: "white",
+  gameOver: null,
 };
 
 renderBoard(board, container, state);
 
 function render() {
   renderBoard(board, container, state);
-  renderTurn(state);
+  renderState(state);
 }
 
 attachBoardListener(container, (r, c) => {
   const piece = board[r][c];
-
+  if (state.gameOver) return;
   if (!state.selected) {
     if (piece && piece.color === state.turn) {
       state.selected = { r, c };
@@ -41,6 +42,14 @@ attachBoardListener(container, (r, c) => {
       state.selected = null;
       state.moves = [];
       state.turn = state.turn === "white" ? "black" : "white";
+      state.checkedColor = isInCheck(board, state.turn) ? state.turn : null;
+      if (!hasAnyLegalMoves(board, state.turn)){
+        if (isInCheck(board, state.turn)){
+          state.gameOver = { result: "checkmate", winner: opposite(state.turn)}
+        } else {
+          state.gameOver = { result: "stalemate"};
+        }
+      }
     } else if (piece && piece.color === state.turn) {     // se nella cella c'è un altro pezzo -> cambio selezione e mosse legali
       state.selected = { r, c };
       state.moves = legalMoves(board, { r, c });
@@ -53,5 +62,3 @@ attachBoardListener(container, (r, c) => {
   render();
 });
 
-
-//

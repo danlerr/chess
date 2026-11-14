@@ -10,7 +10,7 @@
 
 /**@readonly */
 export const SIZE = 8;
-const TYPE = Object.freeze({      // object.freeze rende l'oggetto immutabile
+export const TYPE = Object.freeze({      // object.freeze rende l'oggetto immutabile
   KING:    "king",
   QUEEN:   "queen",
   ROOK:    "rook",
@@ -60,4 +60,8 @@ export function createInitialBoard(){
     board[6][c] = createPiece(TYPE.PAWN, COLOR.WHITE);
   }
   return board;
+}
+
+export function opposite(color){
+  return color === COLOR.WHITE ? COLOR.BLACK : COLOR.WHITE;
 }

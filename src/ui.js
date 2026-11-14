@@ -23,14 +23,25 @@ export function renderBoard(board, container, state){
             if (state.moves.some(m => m.r === r && m.c === c)) {
                 el.classList.add("move");
             }
+            if (piece && piece.type === "king" && state.checkedColor === piece.color) {
+                el.classList.add("check");
+            }
             container.appendChild(el);
         }
     }
 }
 
-export function renderTurn(state){
-    document.querySelector("#turn-indicator")
-    .textContent = state.turn === "white" ? "Muove il bianco" : "Muove il nero";
+export function renderState(state){
+    const indicator = document.querySelector("#status");
+    if (state.gameOver?.result === "checkmate"){
+        indicator.textContent = state.turn === "white" ? "Scacco matto! Vince il Nero" : "Scacco matto! Vince il Bianco";
+    } 
+    else if (state.gameOver?.result === "stalemate"){
+        indicator.textContent = "Patta per stallo";
+    } 
+    else{
+        indicator.textContent = state.turn === "white" ? "Muove il bianco" : "Muove il nero";
+    }
 }
 
 // event bubbling per le celle della board 
