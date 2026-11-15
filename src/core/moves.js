@@ -75,6 +75,7 @@ export function isInCheck(board, color){
  * promozione automatica a regina (sostituisce l'istanza).
  */
 export function makeMove(board, from, to, chosenMove){
+  const next = board.map(row => [...row]);
   const movingPiece = board[from.r][from.c];
   const originalType = movingPiece.type;
   const castle = chosenMove?.castle;
@@ -82,33 +83,33 @@ export function makeMove(board, from, to, chosenMove){
   const isEnPassant = chosenMove?.enPassant === true;
   let capturedPiece;
   if (isEnPassant){
-    capturedPiece = board[from.r][to.c];
-    board[from.r][to.c] = null;
+    capturedPiece = next[from.r][to.c];
+    next[from.r][to.c] = null;
   } else {
     capturedPiece = board[to.r][to.c];
   }
 
-  board[to.r][to.c] = movingPiece;
-  board[from.r][from.c] = null;
+  next[to.r][to.c] = movingPiece;
+  next[from.r][from.c] = null;
 
   // arrocco
   if (castle === "short"){
-    board[to.r][5] = board[to.r][7];
-    board[to.r][7] = null;
+    next[to.r][5] = next[to.r][7];
+    next[to.r][7] = null;
   } else if (castle === "long"){
-    board[to.r][3] = board[to.r][0];
-    board[to.r][0] = null;
+    next[to.r][3] = next[to.r][0];
+    next[to.r][0] = null;
   }
 
   // promozione: sostituiamo l'istanza perché ora i pezzi sono classi
   let promotion = null;
   const lastRow = movingPiece.color === "white" ? 0 : 7;
   if (originalType === "pawn" && to.r === lastRow){
-    board[to.r][to.c] = createPiece("queen", movingPiece.color);
+    next[to.r][to.c] = createPiece("queen", movingPiece.color);
     promotion = "queen";
   }
 
-  return {
+  const record = {
     from,
     to,
     piece: { type: originalType, color: movingPiece.color },
@@ -117,6 +118,7 @@ export function makeMove(board, from, to, chosenMove){
     enPassant: isEnPassant,
     castle: castle ?? null,
   };
+  return { board: next, record};
 }
 
 /**
