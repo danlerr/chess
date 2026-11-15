@@ -49,3 +49,5 @@ h1 {
 
 .piece.white { color: #fff; text-shadow: 0 0 2px #000; }
 .piece.black { color: #000; }
+
+.cell.selected { outline: 3px solid #755ef6; outline-offset: -3px; }
