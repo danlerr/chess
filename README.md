@@ -1,16 +1,32 @@
-# React + Vite
+<div align="center">
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+<img src="public/board.png" alt="board" width="280">
+<h3>chess</h3>
 
-Currently, two official plugins are available:
+</div>
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
 
-## React Compiler
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+An educational chess application, now being ported to **React** as a frontend warmup for the Front-End Engineering course. The original vanilla JavaScript implementation is archived on the [`vanilla`](https://github.com/danlerr/chess/tree/vanilla) branch. Both versions share the same pure game logic under `src/core/`; only the rendering layer changes. Development is organized into iterative sprints, each surfaced as a dedicated commit in the history.
 
-## Expanding the Oxlint configuration
+## Getting started
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+Prerequisites: Node.js 18+ and npm.
+
+```
+npm install
+npm run dev
+```
+
+## Project structure
+
+```
+chess/
+├── index.html        # Vite entry point
+├── public/           # Static assets served as-is
+└── src/
+    ├── core/         # Pure game logic (board, pieces, moves) — shared with vanilla
+    ├── components/   # React UI components
+    ├── App.jsx       # Root component, holds game state
+    └── main.jsx      # React entry point
+```
