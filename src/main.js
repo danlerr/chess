@@ -1,4 +1,4 @@
-import { renderBoard,attachBoardListener, renderState } from "./ui";
+import { renderBoard,attachBoardListener, renderState, renderClocks, animateMove } from "./ui";
 import { createInitialBoard, opposite } from "./core/board";
 import { makeMove, isInCheck, legalMoves, computeGameOver } from "./core/moves.js";
 import "./style.css";
@@ -13,6 +13,8 @@ const state = {
   turn: "white",
   gameOver: null,
   history: [],
+  clocks: { white: 600, black: 600},
+  busy: false,
 };
 
 renderBoard(board, container, state);
@@ -20,10 +22,20 @@ renderBoard(board, container, state);
 function render() {
   renderBoard(board, container, state);
   renderState(state);
+  renderClocks(state);
 }
 
-attachBoardListener(container, (r, c) => {
+setInterval(() => {
   if (state.gameOver) return;
+  state.clocks[state.turn]--;
+  if (state.clocks[state.turn] <= 0){
+    state.gameOver = { result: "timeout", winner: opposite(state.turn) };
+  }
+  render();
+}, 1000);
+
+attachBoardListener(container, async (r, c) => {
+  if (state.busy || state.gameOver) return;
 
   const piece = board[r][c];
   const to = { r, c };
@@ -47,13 +59,20 @@ attachBoardListener(container, (r, c) => {
     state.selected = null;
     state.moves = [];
   } else if (chosenMove) {
+
+    state.busy = true;
+    await animateMove(from, to);
     const record = makeMove(board, from, to, chosenMove);
+
     state.history.push(record);
     state.selected = null;
     state.moves = [];
     state.turn = opposite(state.turn);
     state.checkedColor = isInCheck(board, state.turn) ? state.turn : null;
     state.gameOver = computeGameOver(board, state.turn);
+
+    state.busy = false;
+
   } else if (piece && piece.color === state.turn) {
     state.selected = to;
     state.moves = legalMoves(board, to, state.history);
@@ -61,7 +80,6 @@ attachBoardListener(container, (r, c) => {
     state.selected = null;
     state.moves = [];
   }
-
   render();
 });
 

@@ -78,3 +78,18 @@ h1 {
 .cell.check {
   background: #ff6b6b !important;
 }
+
+.cell {
+  transition: transform 250ms ease;
+}
+
+#clock-white, #clock-black {
+  font-family: monospace;
+  font-size: 24px;
+  padding: 8px 16px;
+  opacity: 0.5;
+}
+.active {
+  opacity: 1;
+  color: #ffcc33;
+}

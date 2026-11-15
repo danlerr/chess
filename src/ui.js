@@ -38,7 +38,10 @@ export function renderState(state){
     } 
     else if (state.gameOver?.result === "stalemate"){
         indicator.textContent = "Patta per stallo";
-    } 
+    } else if (state.gameOver?.result === "timeout"){
+        const winner = state.gameOver.winner === "white" ? "Bianco" : "Nero";
+        indicator.textContent = `Tempo scaduto! Vince il ${winner}`;
+    }
     else{
         indicator.textContent = state.turn === "white" ? "Muove il bianco" : "Muove il nero";
     }
@@ -57,4 +60,46 @@ export function attachBoardListener(container, onCellClick){
                 // --> inversion of control 
                 onCellClick(r, c);    // <- closure: ricorda la variabile onCellClick
             })
+}
+
+function formatTime(seconds){
+    const m = Math.floor(seconds/60);
+    const s = seconds % 60;
+    return `${m}:${s.toString().padStart(2, "0")}`;
+}
+
+export function renderClocks(state){
+  document.querySelector("#clock-white").textContent = `${formatTime(state.clocks.white)}`;
+  document.querySelector("#clock-black").textContent = `${formatTime(state.clocks.black)}`;
+
+  // highlight dell'orologio attivo
+  document.querySelector("#clock-white").classList.toggle("active", state.turn === "white" && !state.gameOver);
+  document.querySelector("#clock-black").classList.toggle("active", state.turn === "black" && !state.gameOver);
+}
+
+function waitForTransition(element, timeout = 500){
+    return new Promise((resolve) => {
+        let done = false;
+        const finish = () => { 
+            if (done) return;
+            done = true;
+            element.removeEventListener("transitionend", finish);
+            resolve();
+        }
+        element.addEventListener("transitionend", finish);
+        setTimeout(finish, timeout);
+    });
+}
+
+export function animateMove(from, to){
+    const fromCell = document.querySelector(`[data-row="${from.r}"][data-col="${from.c}"]`);
+    const toCell = document.querySelector(`[data-row="${to.r}"][data-col="${to.c}"]`);
+
+    if (!fromCell || !toCell) return Promise.resolve();
+    const dx = toCell.offsetLeft - fromCell.offsetLeft;
+    const dy = toCell.offsetTop - fromCell.offsetTop;
+    fromCell.style.transform = `translate(${dx}px, ${dy}px)`;
+    fromCell.style.zIndex = "10";
+
+    return waitForTransition(fromCell);
 }
