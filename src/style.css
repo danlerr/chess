@@ -51,3 +51,6 @@ h1 {
 .piece.black { color: #000; }
 
 .cell.selected { outline: 3px solid #755ef6; outline-offset: -3px; }
+
+.check-banner { color: #f87171; font-weight: 600; }
+.gameover-banner { color: #facc15; font-weight: 700; font-size: 20px; }
