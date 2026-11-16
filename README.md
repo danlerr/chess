@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="public/board.png" alt="board" width="280">
+<img src="public/rboard.png" alt="board" width="280">
 <h3>chess</h3>
 
 </div>
