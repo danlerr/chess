@@ -103,17 +103,31 @@ function App(){
 
   //-RENDER
   return(
-    <div>
-      <TurnIndicator turn={turn} />
-      <div className="clocks">
-        <Clock color="black" seconds={clocks.black} active={turn === 'black' && !gameOver} />
-        <Clock color="white" seconds={clocks.white} active={turn === 'white' && !gameOver} />
-      </div>
-      <GameOverMessage gameOver={gameOver} checkedColor={checkedColor} />
-      <Board board={board} selected={selected} onCellClick={handleCellClick}/>
-      <button onClick={startNewGame}>Nuova partita</button>
-      <SaveGameForm onSave={handleSaveGame} />
-      <SavedGamesList games={savedGames} />
+    <div className="app">
+      <header className="app-header">
+        <TurnIndicator turn={turn} />
+        <div className="status">
+          <GameOverMessage gameOver={gameOver} checkedColor={checkedColor} />
+        </div>
+      </header>
+
+      <main className="layout">
+        <aside className="sidebar">
+          <h2>Partite salvate</h2>
+          <SaveGameForm onSave={handleSaveGame} />
+          <SavedGamesList games={savedGames} />
+        </aside>
+
+        <section className="game">
+          <Clock color="black" seconds={clocks.black} active={turn === 'black' && !gameOver} />
+          <Board board={board} selected={selected} onCellClick={handleCellClick} />
+          <Clock color="white" seconds={clocks.white} active={turn === 'white' && !gameOver} />
+        </section>
+      </main>
+
+      <footer className="app-footer">
+        <button className="btn btn-primary" onClick={startNewGame}>Nuova partita</button>
+      </footer>
     </div>
   )
 }

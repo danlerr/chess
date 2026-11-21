@@ -18,7 +18,7 @@ function SaveGameForm({ onSave }){
             onChange={e => setTitle(e.target.value)}
             placeholder="Nome della partita"
         />
-        <button type="submit">Salva partita</button>
+        <button type="submit" className="btn">Salva partita</button>
         </form>
     )
 }
