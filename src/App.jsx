@@ -1,5 +1,7 @@
 import Board from './components/Board'
 import Clock from './components/Clock'
+import TurnIndicator from './components/TurnIndicator'
+import GameOverMessage from './components/GameOverMessage'
 
 import { createInitialBoard, opposite } from './core/board'
 import { useState, useEffect } from 'react'
@@ -16,7 +18,7 @@ function App(){
   const[clocks, setClocks] = useState({ white: 600, black: 600 })
 
   //-DERIVED
-  const checkedColor = isInCheck(board, turn)
+  const checkedColor = isInCheck(board, turn) ? turn : null
 
   //-EFFECTS
   useEffect(() => {
@@ -62,7 +64,7 @@ function App(){
       const over = computeGameOver(nextBoard, nextTurn)
       setBoard(nextBoard)
       setHistory(h => [...h, record])
-      setTurn(opposite(turn))
+      setTurn(nextTurn)
       setSelected(null)
       if (over) setGameOver(over)
       return
@@ -75,28 +77,12 @@ function App(){
   //-RENDER
   return(
     <div>
-
-      <h1>Chess - tocca al {turn === 'white' ? 'bianco' : 'nero'}</h1>
-
+      <TurnIndicator turn={turn} />
       <div className="clocks">
         <Clock color="black" seconds={clocks.black} active={turn === 'black' && !gameOver} />
         <Clock color="white" seconds={clocks.white} active={turn === 'white' && !gameOver} />
       </div>
-
-      {checkedColor && !gameOver && (
-        <p className="check-banner">Scacco al {checkedColor === 'white' ? 'bianco' : 'nero'}</p>
-      )}
-
-      {gameOver && (
-        <p className="gameover-banner">
-          {gameOver.result === 'checkmate' 
-          ? `Matto! Vince il ${gameOver.winner === 'white' ? 'bianco' : 'nero'}`
-          : gameOver.result === 'timeout' 
-          ? `Tempo scaduto! Vince il ${gameOver.winner === 'white' ? 'bianco' : 'nero'}`
-          : 'Stallo (patta)'}
-        </p>
-      )}
-
+      <GameOverMessage gameOver={gameOver} checkedColor={checkedColor} />
       <Board board={board} selected={selected} onCellClick={handleCellClick}/>
     </div>
   )
