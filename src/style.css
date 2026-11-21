@@ -68,3 +68,9 @@ h1 {
 .clock.active { border-color: #f6e05e; background: #3a3833; }
 .clock-label { font-size: 12px; opacity: 0.7; }
 .clock-time { font-size: 24px; font-family: monospace; }
+
+.save-form { display: flex; gap: 8px; }
+.saved-list { list-style: none; width: 100%; max-width: 520px; }
+.saved-item { display: flex; justify-content: space-between; gap: 12px; padding: 8px 0; border-bottom: 1px solid #444; }
+.saved-meta { opacity: 0.7; font-size: 14px; }
+.saved-empty { opacity: 0.6; }

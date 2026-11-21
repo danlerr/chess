@@ -2,10 +2,12 @@ import Board from './components/Board'
 import Clock from './components/Clock'
 import TurnIndicator from './components/TurnIndicator'
 import GameOverMessage from './components/GameOverMessage'
+import SavedGamesList from './components/SavedGamesList'
 
 import { createInitialBoard, opposite } from './core/board'
 import { useState, useEffect } from 'react'
 import { legalMoves, makeMove, isInCheck, computeGameOver } from './core/moves'
+import SaveGameForm from './components/SaveGameForm'
 
 const INITIAL_CLOCKS = { white: 600, black: 600}
 const INITIAL_TURN = 'white'
@@ -13,12 +15,13 @@ const INITIAL_TURN = 'white'
 function App(){
 
   //-STATE
-  const[selected, setSelected] = useState(null)
-  const[board, setBoard] = useState(() => createInitialBoard())
-  const[history, setHistory] = useState([])
-  const[turn, setTurn] = useState(INITIAL_TURN)
-  const[gameOver, setGameOver] = useState(null)
-  const[clocks, setClocks] = useState(INITIAL_CLOCKS)
+  const [selected, setSelected] = useState(null)
+  const [board, setBoard] = useState(() => createInitialBoard())
+  const [history, setHistory] = useState([])
+  const [turn, setTurn] = useState(INITIAL_TURN)
+  const [gameOver, setGameOver] = useState(null)
+  const [clocks, setClocks] = useState(INITIAL_CLOCKS)
+  const [savedGames, setSavedGames] = useState([])
 
   //-DERIVED
   const checkedColor = isInCheck(board, turn) ? turn : null
@@ -86,6 +89,18 @@ function App(){
     setClocks(INITIAL_CLOCKS)
   }
 
+  function handleSaveGame(title){
+    const newGame = {
+        id: crypto.randomUUID(),
+        title, 
+        moves: history,
+        result: gameOver?.result ?? "ongoing",
+        winner: gameOver?.winner ?? null,
+        createdAt: new Date().toISOString(),
+      }
+    setSavedGames( s => [...s, newGame])
+  }
+
   //-RENDER
   return(
     <div>
@@ -97,6 +112,8 @@ function App(){
       <GameOverMessage gameOver={gameOver} checkedColor={checkedColor} />
       <Board board={board} selected={selected} onCellClick={handleCellClick}/>
       <button onClick={startNewGame}>Nuova partita</button>
+      <SaveGameForm onSave={handleSaveGame} />
+      <SavedGamesList games={savedGames} />
     </div>
   )
 }
