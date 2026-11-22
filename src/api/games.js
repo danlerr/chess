@@ -1,25 +1,39 @@
-const BASE_URL = "http://localhost:3001/games";
+import { supabase } from "./supabase";
 
-async function request(url, options) {
-  const res = await fetch(url, options);
-  if (!res.ok) throw new Error(`Errore HTTP ${res.status}`);
-  return res.json();
+export async function listGames() {
+    const { data, error } = await supabase
+        .from("games")
+        .select("*")
+        .order("created_at")
+    if (error) throw error
+    return data
 }
 
-export const listGame = () => request(BASE_URL)
+export async function createGame(game) {
+    const { data, error } = await supabase
+        .from("games")
+        .insert(game)
+        .select()
+        .single()
+    if (error) throw error
+    return data
+}
 
-export const createGame = (game) => request(BASE_URL, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(game),
-})
+export async function updateGame (id, patch){
+    const { data, error } = await supabase
+        .from("games")
+        .update(patch)
+        .eq("id", id)
+        .select()
+        .single()
+    if (error) throw error
+    return data
+}
 
-export const updateGame = (id, patch) => request(`${BASE_URL}/${id}`, {
-    method: "PATCH",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(patch),
-})
-
-export const deleteGame = (id) => request(`${BASE_URL}/${id}`, {
-    method: "DELETE",
-})
+export async function deleteGame(id) {
+    const { error } = await supabase
+        .from("games")
+        .delete()
+        .eq("id", id)
+    if (error) throw error
+}

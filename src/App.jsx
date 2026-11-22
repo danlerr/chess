@@ -8,7 +8,7 @@ import { createInitialBoard, opposite } from './core/board'
 import { useState, useEffect } from 'react'
 import { legalMoves, makeMove, isInCheck, computeGameOver } from './core/moves'
 import SaveGameForm from './components/SaveGameForm'
-import { createGame, deleteGame, listGame, updateGame } from './api/games'
+import { listGames, createGame, updateGame, deleteGame } from './api/games'
 
 const INITIAL_CLOCKS = { white: 600, black: 600}
 const INITIAL_TURN = 'white'
@@ -53,7 +53,7 @@ function App(){
   useEffect(() => {
     async function load() {
       try {
-        const gs = await listGame()
+        const gs = await listGames()
         setSavedGames(gs)
       } catch(err) {
         console.error(err)
@@ -118,7 +118,7 @@ function App(){
         moves: history,
         result: gameOver?.result ?? "ongoing",
         winner: gameOver?.winner ?? null,
-        createdAt: new Date().toISOString(),
+        created_at: new Date().toISOString(),
       }
     try {
       const saved = await createGame(newGame)
@@ -129,7 +129,7 @@ function App(){
     }
   }
 
-  // update
+  // delete
   async function handleDeleteGame(id){
     setError(null)
     try {
@@ -142,11 +142,12 @@ function App(){
     
   }
 
-  // delete
+  // update
   async function handleRenameGame(id, newTitle){
     setError(null)
     try {
       const updated = await updateGame(id, { title: newTitle })
+      console.log("updated:", updated)
       setSavedGames( gs => gs.map(
       g => g.id === id ? updated : g ))
     } catch(err) {
