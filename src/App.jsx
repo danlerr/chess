@@ -101,6 +101,10 @@ function App(){
     setSavedGames( s => [...s, newGame])
   }
 
+  function handleDeleteGame(id){
+    setSavedGames(gs => gs.filter(g => g.id !== id))
+  }
+
   //-RENDER
   return(
     <div className="app">
@@ -115,7 +119,7 @@ function App(){
         <aside className="sidebar">
           <h2>Partite salvate</h2>
           <SaveGameForm onSave={handleSaveGame} />
-          <SavedGamesList games={savedGames} />
+          <SavedGamesList games={savedGames} onDelete={handleDeleteGame}/>
         </aside>
 
         <section className="game">

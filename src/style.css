@@ -179,20 +179,25 @@ h1 { font-size: 22px; font-weight: 600; }
 .save-form input:focus { border-color: var(--accent); }
 
 /* --- lista partite --- */
+/* --- lista partite --- */
 .saved-list { list-style: none; display: flex; flex-direction: column; }
 
 .saved-item {
   display: flex;
-  flex-direction: column;
-  gap: 2px;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
   padding: 10px 0;
   border-top: 1px solid var(--border);
 }
 
-.saved-title { font-weight: 500; }
+.saved-info { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.saved-title { font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .saved-meta { color: var(--muted); font-size: 13px; }
 .saved-empty { color: var(--muted); font-size: 14px; }
 
+.btn-danger { padding: 4px 10px; font-size: 13px; color: var(--danger); }
+.btn-danger:hover { background: var(--danger); border-color: var(--danger); color: #fff; }
 /* --- schermi stretti --- */
 @media (max-width: 900px) {
   .layout { flex-direction: column-reverse; align-items: center; }
