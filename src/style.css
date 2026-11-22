@@ -207,3 +207,18 @@ h1 { font-size: 22px; font-weight: 600; }
 @media (max-width: 560px) {
   :root { --cell: 40px; }
 }
+
+.saved-actions { display: flex; gap: 6px; flex-shrink: 0; }
+.saved-actions .btn { padding: 4px 10px; font-size: 13px; }
+
+.rename-form { display: flex; gap: 6px; width: 100%; }
+.rename-form input {
+  flex: 1;
+  min-width: 0;
+  padding: 4px 8px;
+  background: var(--panel-2);
+  border: 1px solid var(--accent);
+  border-radius: 6px;
+  outline: none;
+}
+.rename-form .btn { padding: 4px 10px; font-size: 13px; }

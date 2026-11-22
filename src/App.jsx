@@ -105,6 +105,11 @@ function App(){
     setSavedGames(gs => gs.filter(g => g.id !== id))
   }
 
+  function handleRenameGame(id, newTitle){
+    setSavedGames( gs => gs.map(
+      g => g.id === id ? { ...g, title: newTitle} : g ))
+  }
+
   //-RENDER
   return(
     <div className="app">
@@ -119,7 +124,7 @@ function App(){
         <aside className="sidebar">
           <h2>Partite salvate</h2>
           <SaveGameForm onSave={handleSaveGame} />
-          <SavedGamesList games={savedGames} onDelete={handleDeleteGame}/>
+          <SavedGamesList games={savedGames} onDelete={handleDeleteGame} onRename={handleRenameGame}/>
         </aside>
 
         <section className="game">
