@@ -8,6 +8,7 @@ import { createInitialBoard, opposite } from './core/board'
 import { useState, useEffect } from 'react'
 import { legalMoves, makeMove, isInCheck, computeGameOver } from './core/moves'
 import SaveGameForm from './components/SaveGameForm'
+import { createGame, deleteGame, listGame, updateGame } from './api/games'
 
 const INITIAL_CLOCKS = { white: 600, black: 600}
 const INITIAL_TURN = 'white'
@@ -27,6 +28,8 @@ function App(){
   const checkedColor = isInCheck(board, turn) ? turn : null
 
   //-EFFECTS
+
+  // -- clocks
   useEffect(() => {
     if (gameOver) return
     const id = setInterval(() => {
@@ -43,6 +46,20 @@ function App(){
     if (clocks.white <= 0) setGameOver({ result: 'timeout', winner: 'black'})
     else if (clocks.black <= 0) setGameOver({ result:'timeout', winner: 'white'})
   }, [clocks, gameOver])
+
+  //-- load games
+  useEffect(() => {
+    async function load() {
+      try {
+        const gs = await listGame()
+        setSavedGames(gs)
+      } catch(err) {
+        console.error(err)
+      }
+    }
+    load()
+  }, [])
+
 
   //-HANDLERS
   function handleCellClick(r, c){
@@ -89,25 +106,43 @@ function App(){
     setClocks(INITIAL_CLOCKS)
   }
 
-  function handleSaveGame(title){
+  async function handleSaveGame(title){
     const newGame = {
-        id: crypto.randomUUID(),
         title, 
         moves: history,
         result: gameOver?.result ?? "ongoing",
         winner: gameOver?.winner ?? null,
         createdAt: new Date().toISOString(),
       }
-    setSavedGames( s => [...s, newGame])
+    try {
+      const saved = await createGame(newGame)
+      setSavedGames( s => [...s, saved])
+    } catch(err) {
+      console.log(err)
+      alert("Salvataggio non riuscito")
+    }
   }
 
-  function handleDeleteGame(id){
-    setSavedGames(gs => gs.filter(g => g.id !== id))
+  async function handleDeleteGame(id){
+    try {
+      await deleteGame(id)
+      setSavedGames(gs => gs.filter(g => g.id !== id))
+    } catch (err) {
+      console.log(err)
+      alert("Eliminazione non riuscita")
+    }
+    
   }
 
-  function handleRenameGame(id, newTitle){
-    setSavedGames( gs => gs.map(
-      g => g.id === id ? { ...g, title: newTitle} : g ))
+  async function handleRenameGame(id, newTitle){
+    try {
+      const updated = await updateGame(id, { title: newTitle })
+      setSavedGames( gs => gs.map(
+      g => g.id === id ? updated : g ))
+    } catch(err) {
+      console.log(err)
+      alert("Modifica non riuscita")
+    }
   }
 
   //-RENDER
