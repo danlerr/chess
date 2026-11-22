@@ -1,21 +1,4 @@
 {
-  "games": [
-    {
-      "title": "890000",
-      "moves": [],
-      "result": "ongoing",
-      "winner": null,
-      "createdAt": "2026-11-22T16:14:41.057Z",
-      "id": "97CoGgbwhUY"
-    },
-    {
-      "title": "ciao",
-      "moves": [],
-      "result": "ongoing",
-      "winner": null,
-      "createdAt": "2026-11-22T16:26:24.385Z",
-      "id": "4N3a4ic9inQ"
-    }
-  ],
+  "games": [],
   "$schema": "./node_modules/json-server/schema.json"
 }

@@ -23,6 +23,8 @@ function App(){
   const [gameOver, setGameOver] = useState(null)
   const [clocks, setClocks] = useState(INITIAL_CLOCKS)
   const [savedGames, setSavedGames] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
 
   //-DERIVED
   const checkedColor = isInCheck(board, turn) ? turn : null
@@ -47,7 +49,7 @@ function App(){
     else if (clocks.black <= 0) setGameOver({ result:'timeout', winner: 'white'})
   }, [clocks, gameOver])
 
-  //-- load games
+  //-- load games - read operation (cRud)
   useEffect(() => {
     async function load() {
       try {
@@ -55,7 +57,8 @@ function App(){
         setSavedGames(gs)
       } catch(err) {
         console.error(err)
-      }
+        setError("Server non raggiungibile")
+      } finally { setLoading(false) }
     }
     load()
   }, [])
@@ -106,7 +109,10 @@ function App(){
     setClocks(INITIAL_CLOCKS)
   }
 
+  // CrUD handler 
+  // create
   async function handleSaveGame(title){
+    setError(null)
     const newGame = {
         title, 
         moves: history,
@@ -119,29 +125,33 @@ function App(){
       setSavedGames( s => [...s, saved])
     } catch(err) {
       console.log(err)
-      alert("Salvataggio non riuscito")
+      setError("Salvataggio non riuscito")
     }
   }
 
+  // update
   async function handleDeleteGame(id){
+    setError(null)
     try {
       await deleteGame(id)
       setSavedGames(gs => gs.filter(g => g.id !== id))
     } catch (err) {
       console.log(err)
-      alert("Eliminazione non riuscita")
+      setError("Eliminazione non riuscita")
     }
     
   }
 
+  // delete
   async function handleRenameGame(id, newTitle){
+    setError(null)
     try {
       const updated = await updateGame(id, { title: newTitle })
       setSavedGames( gs => gs.map(
       g => g.id === id ? updated : g ))
     } catch(err) {
       console.log(err)
-      alert("Modifica non riuscita")
+      setError("Modifica non riuscita")
     }
   }
 
@@ -158,8 +168,15 @@ function App(){
       <main className="layout">
         <aside className="sidebar">
           <h2>Partite salvate</h2>
-          <SaveGameForm onSave={handleSaveGame} />
-          <SavedGamesList games={savedGames} onDelete={handleDeleteGame} onRename={handleRenameGame}/>
+          {error && <p className="error-msg">{error}</p>}
+          {loading ? (
+            <p className="muted">Caricamento…</p>
+          ) : (
+            <>
+              <SaveGameForm onSave={handleSaveGame} />
+              <SavedGamesList games={savedGames} onDelete={handleDeleteGame} onRename={handleRenameGame} />
+            </>
+          )}
         </aside>
 
         <section className="game">

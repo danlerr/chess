@@ -222,3 +222,14 @@ h1 { font-size: 22px; font-weight: 600; }
   outline: none;
 }
 .rename-form .btn { padding: 4px 10px; font-size: 13px; }
+
+.error-msg {
+  color: var(--danger);
+  background: color-mix(in srgb, var(--danger) 12%, transparent);
+  border: 1px solid var(--danger);
+  border-radius: var(--radius);
+  padding: 8px 10px;
+  margin: 8px 0;
+  font-size: 0.9rem;
+}
+.muted { color: var(--muted); }
