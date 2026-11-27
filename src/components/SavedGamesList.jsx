@@ -1,8 +1,10 @@
 import { useState } from "react";
 
-import { GoTrash, GoPencil, GoPlus } from "react-icons/go"
+import { GoTrash, GoPencil } from "react-icons/go"
 
 import Button from "./Button";
+import { useSavedGames } from "../hooks/useSavedGames";
+import { deleteGame } from "../api/games";
 
 const RESULT_LABEL = {
   ongoing: "in corso",
@@ -13,12 +15,14 @@ const RESULT_LABEL = {
 
 const NAME = { white: "bianco", black: "nero" };
 
-function SavedGamesList({ games, onDelete, onRename }) {
+function SavedGamesList() {
 
   const [editingId, setEditingId] = useState(null)
   const [draft, setDraft] = useState("")
 
-  if (games.length === 0) {
+  const { savedGames, renameGame, removeGame } = useSavedGames()
+
+  if (savedGames.length === 0) {
     return <p className="saved-empty">Nessuna partita salvata</p>;
   }
 
@@ -36,13 +40,13 @@ function handleRenameSubmit(e){
   e.preventDefault()
   const trimmed = draft.trim()
   if (!trimmed) return
-  onRename(editingId, trimmed)
+  renameGame(editingId, trimmed)
   setEditingId(null)
 }
 
   return (
     <ul className="saved-list">
-      {games.map(game =>
+      {savedGames.map(game =>
         game.id === editingId ? (
           <li key={game.id} className="saved-item">
             <form className="rename-form" onSubmit={handleRenameSubmit}>
@@ -69,7 +73,7 @@ function handleRenameSubmit(e){
               <Button onClick={() => startEdit(game)} aria-label="Rinomina" title="Rinomina">
                 <GoPencil />
               </Button>
-              <Button danger onClick={() => onDelete(game.id)} aria-label="Elimina" title="Elimina">
+              <Button danger onClick={() => removeGame(game.id)} aria-label="Elimina" title="Elimina">
                 <GoTrash />
               </Button>
             </div>

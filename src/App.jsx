@@ -4,13 +4,17 @@ import TurnIndicator from './components/TurnIndicator'
 import GameOverMessage from './components/GameOverMessage'
 import SavedGamesList from './components/SavedGamesList'
 import Button from './components/Button'
+import SaveGameForm from './components/SaveGameForm'
 
 import { createInitialBoard, opposite } from './core/board'
-import { useState, useEffect } from 'react'
+
 import { legalMoves, makeMove, isInCheck, computeGameOver } from './core/moves'
-import SaveGameForm from './components/SaveGameForm'
-import { listGames, createGame, updateGame, deleteGame } from './api/games'
-import { GoPlus } from 'react-icons/go'
+
+import { useSavedGames } from './hooks/useSavedGames'
+
+import { useState, useEffect } from 'react'
+
+
 
 const INITIAL_CLOCKS = { white: 600, black: 600}
 const INITIAL_TURN = 'white'
@@ -24,9 +28,9 @@ function App(){
   const [turn, setTurn] = useState(INITIAL_TURN)
   const [gameOver, setGameOver] = useState(null)
   const [clocks, setClocks] = useState(INITIAL_CLOCKS)
-  const [savedGames, setSavedGames] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
+
+  const { loading, error, saveGame } = useSavedGames()
+  
 
   //-DERIVED
   const checkedColor = isInCheck(board, turn) ? turn : null
@@ -50,20 +54,6 @@ function App(){
     if (clocks.white <= 0) setGameOver({ result: 'timeout', winner: 'black'})
     else if (clocks.black <= 0) setGameOver({ result:'timeout', winner: 'white'})
   }, [clocks, gameOver])
-
-  //-- load games - read operation (cRud)
-  useEffect(() => {
-    async function load() {
-      try {
-        const gs = await listGames()
-        setSavedGames(gs)
-      } catch(err) {
-        console.error(err)
-        setError("Server non raggiungibile")
-      } finally { setLoading(false) }
-    }
-    load()
-  }, [])
 
 
   //-HANDLERS
@@ -111,52 +101,15 @@ function App(){
     setClocks(INITIAL_CLOCKS)
   }
 
-  // CrUD handler 
-  // create
-  async function handleSaveGame(title){
-    setError(null)
-    const newGame = {
-        title, 
-        moves: history,
-        result: gameOver?.result ?? "ongoing",
-        winner: gameOver?.winner ?? null,
-        created_at: new Date().toISOString(),
-      }
-    try {
-      const saved = await createGame(newGame)
-      setSavedGames( s => [...s, saved])
-    } catch(err) {
-      console.log(err)
-      setError("Salvataggio non riuscito")
-    }
+  function handleSaveGame(title){
+    saveGame({
+      title,
+      moves: history, 
+      result: gameOver?.result ?? "onGoing",
+      winner: gameOver?.winner ?? null,
+    })
   }
 
-  // delete
-  async function handleDeleteGame(id){
-    setError(null)
-    try {
-      await deleteGame(id)
-      setSavedGames(gs => gs.filter(g => g.id !== id))
-    } catch (err) {
-      console.log(err)
-      setError("Eliminazione non riuscita")
-    }
-    
-  }
-
-  // update
-  async function handleRenameGame(id, newTitle){
-    setError(null)
-    try {
-      const updated = await updateGame(id, { title: newTitle })
-      console.log("updated:", updated)
-      setSavedGames( gs => gs.map(
-      g => g.id === id ? updated : g ))
-    } catch(err) {
-      console.log(err)
-      setError("Modifica non riuscita")
-    }
-  }
 
   //-RENDER
   return(
@@ -177,7 +130,7 @@ function App(){
           ) : (
             <>
               <SaveGameForm onSave={handleSaveGame} />
-              <SavedGamesList games={savedGames} onDelete={handleDeleteGame} onRename={handleRenameGame} />
+              <SavedGamesList />
             </>
           )}
         </aside>
@@ -190,7 +143,7 @@ function App(){
           <footer className="app-footer">
             <Button primary onClick={startNewGame}>Nuova partita</Button>
           </footer>
-          
+
         </section>
       </main>
     </div>
