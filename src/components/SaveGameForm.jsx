@@ -1,4 +1,7 @@
 import { useState } from "react";
+import { GoPlus } from "react-icons/go";
+
+import Button from "./Button";
 
 function SaveGameForm({ onSave }){
     const [title, setTitle] = useState("")
@@ -18,7 +21,9 @@ function SaveGameForm({ onSave }){
             onChange={e => setTitle(e.target.value)}
             placeholder="Nome della partita"
         />
-        <button type="submit" className="btn">Salva partita</button>
+        <Button primary type="submit" aria-label="Salva" title="Salva">
+            <GoPlus />
+        </Button>
         </form>
     )
 }

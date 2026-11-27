@@ -3,12 +3,14 @@ import Clock from './components/Clock'
 import TurnIndicator from './components/TurnIndicator'
 import GameOverMessage from './components/GameOverMessage'
 import SavedGamesList from './components/SavedGamesList'
+import Button from './components/Button'
 
 import { createInitialBoard, opposite } from './core/board'
 import { useState, useEffect } from 'react'
 import { legalMoves, makeMove, isInCheck, computeGameOver } from './core/moves'
 import SaveGameForm from './components/SaveGameForm'
 import { listGames, createGame, updateGame, deleteGame } from './api/games'
+import { GoPlus } from 'react-icons/go'
 
 const INITIAL_CLOCKS = { white: 600, black: 600}
 const INITIAL_TURN = 'white'
@@ -184,12 +186,13 @@ function App(){
           <Clock color="black" seconds={clocks.black} active={turn === 'black' && !gameOver} />
           <Board board={board} selected={selected} onCellClick={handleCellClick} />
           <Clock color="white" seconds={clocks.white} active={turn === 'white' && !gameOver} />
+
+          <footer className="app-footer">
+            <Button primary onClick={startNewGame}>Nuova partita</Button>
+          </footer>
+          
         </section>
       </main>
-
-      <footer className="app-footer">
-        <button className="btn btn-primary" onClick={startNewGame}>Nuova partita</button>
-      </footer>
     </div>
   )
 }

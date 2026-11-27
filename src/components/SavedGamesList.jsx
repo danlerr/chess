@@ -1,5 +1,9 @@
 import { useState } from "react";
 
+import { GoTrash, GoPencil, GoPlus } from "react-icons/go"
+
+import Button from "./Button";
+
 const RESULT_LABEL = {
   ongoing: "in corso",
   checkmate: "matto",
@@ -47,8 +51,8 @@ function handleRenameSubmit(e){
                 onChange={e => setDraft(e.target.value)}
                 autoFocus
               />
-              <button type="submit" className="btn">Salva</button>
-              <button type="button" className="btn" onClick={cancelEdit}>Annulla</button>
+              <Button type="submit">Salva</Button>
+              <Button type="button" onClick={cancelEdit}>Annulla</Button>
             </form>
           </li>
         ) : (
@@ -62,8 +66,12 @@ function handleRenameSubmit(e){
               </span>
             </div>
             <div className="saved-actions">
-              <button className="btn" onClick={() => startEdit(game)}>Rinomina</button>
-              <button className="btn btn-danger" onClick={() => onDelete(game.id)}>Elimina</button>
+              <Button onClick={() => startEdit(game)} aria-label="Rinomina" title="Rinomina">
+                <GoPencil />
+              </Button>
+              <Button danger onClick={() => onDelete(game.id)} aria-label="Elimina" title="Elimina">
+                <GoTrash />
+              </Button>
             </div>
           </li>
         )

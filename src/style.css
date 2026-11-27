@@ -151,6 +151,10 @@ h1 { font-size: 22px; font-weight: 600; }
   border-radius: 6px;
   cursor: pointer;
   transition: background 0.15s, border-color 0.15s;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+
 }
 .btn:hover { background: var(--border); }
 
